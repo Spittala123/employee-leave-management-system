@@ -89,3 +89,11 @@ h1 {
     font-size: 12px;
 
   }
+  .btnReject{
+    background-color: red;
+    color: white;
+  }
+  .btnSubmit{
+    background-color: green;
+    color: white;
+  }

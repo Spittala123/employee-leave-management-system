@@ -3,7 +3,8 @@ import {LeaveApprove} from "../types/LeaveRequest"
 // import { date } from "yup";
 import axios from "axios";
 import React from "react";
-import {style} from "components\styles.css"
+import './Dashboard.css'
+
 const ApproveLeave =() => 
 {
     const [LeaveApprove, setLeaveApprove]= useState<LeaveApprove[]>([]);
@@ -83,14 +84,13 @@ const updateEmployee = (id: number, approveStatus: string) => {
       
         {LeaveApprove.map(leave=>(
             <tr key={leave.id}>
-                {/* <td>{leave.id}</td> */}
                 <td>{leave.userName}</td>
                <td>{new Date(leave.startDate).toLocaleDateString()}</td>
                 <td>{new Date(leave.endDate).toLocaleDateString()}</td> 
                                <td>{leave.status}</td>
                                <td>{leave.quantity}</td>
-                <td> <button className="btn btn-sm" onClick={()=>updateEmployee(leave.id,"approved")}>Approve</button> 
-                <button className="btn btn-denger" onClick={()=>updateEmployee(leave.id,"Rejected")}>Reject</button></td>
+                <td> <button className="btnSubmit" onClick={()=>updateEmployee(leave.id,"approved")}>Approve</button> &nbsp;&nbsp;
+                <button className="btnReject" onClick={()=>updateEmployee(leave.id,"Rejected")}>Reject</button></td>
         
 </tr>
         )
