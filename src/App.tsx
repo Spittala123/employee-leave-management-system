@@ -8,6 +8,7 @@ import AuthService from './components/services/AuthService';
 import Login from './components/Login';
 import RequestLeave from './components/RequestLeave';
 import ApproveLeave from './components/ApproveLeave';
+import React from 'react';
 
 const App = () => {
   const isAuthenticated = AuthService.isAuthenticated();

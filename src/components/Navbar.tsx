@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import AuthService from "../components/services/AuthService";
+import React from "react";
 
 const Navbar = () => {
     const isAuthenticated = AuthService.isAuthenticated();
