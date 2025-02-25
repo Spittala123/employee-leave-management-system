@@ -1,18 +1,14 @@
 
-// https://notepad.pw/share/koLNw0hVdTBZe6YeQSvg 
-
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { number } from 'yup';
-import './styles.css' 
+import './RequestLeave.css'
+
 const LeaveRequestForm: React.FC = () => {
     const [employeeid, setEmployeeid] = useState<number>(0);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
     const [quanity, setQuantity] = useState<number>(0);
     const [status, setStatus] = useState<string>('Pending');
- const [reason,setreason] =useState<string>("");
-  const [leavetypeid,setLeaveType] = useState<number>(0)
+  const [reason,setLeaveType] = useState<string>('sick')
     useEffect(() => {
         const empid = Number(localStorage.getItem('employeeid'));
                if (empid) {
@@ -28,16 +24,17 @@ const LeaveRequestForm: React.FC = () => {
         return diffDays;
     };
 
-    const handleSubmit = async (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => { 
+        const Id = Number(localStorage.getItem('employeeid'));
+
         event.preventDefault();
         const leaveRequest = {
-            employeeid,
+            Id,
             startDate,
             endDate,
             quanity,
             status,
             reason,
-            leavetypeid
         };
     
             try {
@@ -53,28 +50,16 @@ const LeaveRequestForm: React.FC = () => {
                 const result = await response.json();
                 alert("Leaved applied Successfully");
                 console.log(result);
+                window.location.reload();
             } catch (error) {
                 console.error('Error:', error);
             }
         };
-//  console.log(JSON.stringify(leaveRequest));
-//         try {
-//             await axios.post('http://localhost:5224/api/LeaveRequest',
-//                 {Headers:{
-//                     'Authorization':'Bearer '+localStorage.getItem("token")
-//              }, body: JSON.stringify(leaveRequest)});
-//             alert('Leave request submitted successfully');
-//         } catch (error) {
-//             console.error('There was an error submitting the leave request!', error);
-//         }
-  //   };
-   // Handle the change event
+
    const handleChange = (event: { target: { value: any; }; }) => {
     setLeaveType(event.target.value);
    }
-   const handleChangeReson = (event: { target: { value: any; }; }) => {
-    setreason(event.target.value);
-   }
+
     useEffect(() => {
         if (startDate && endDate) {
             setQuantity(calculateQuantity(startDate, endDate));
@@ -85,16 +70,13 @@ const LeaveRequestForm: React.FC = () => {
         <div className="leave-form-container">
       <h2>Apply for Leave</h2>
         <form onSubmit={handleSubmit}>
-            {/* <div>
-                <label>Employee Name: </label>
-                <input type="text" value={employeeid} readOnly />
-            </div> */}
+           
             <div className="form-group">
                 <label>Leave Type</label>
-                <select id="levaetype" name="Leave Type" value={leavetypeid} onChange={handleChange}>
-            <option value="1">Sick</option>
-            <option value="2">Vaction</option>
-            <option value="3">Other</option>
+                <select id="reason" name="Leave Type" value={reason} onChange={handleChange}>
+            <option value="Sick">Sick</option>
+            <option value="Vacation">Vacation</option>
+            <option value="Other">Other</option>
             </select>
             </div>
             <div className="form-group">
@@ -113,10 +95,7 @@ const LeaveRequestForm: React.FC = () => {
                 <label>Status: </label>
                 <input type="text" value={status} readOnly />
             </div>
-            <div className="form-group">
-                <label>Reson : </label>
-                <input type="text" value={reason} id="reson"  onChange={handleChangeReson}/>
-            </div>
+           
             <button className="submit-btn" type="submit">Submit</button>
         </form>
         </div>

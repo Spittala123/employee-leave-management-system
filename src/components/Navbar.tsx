@@ -6,28 +6,12 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     return (
-        <nav className='navbar navbar-strong bg-light px-3'>
-            <a className='navbar-brand' href='/'>React Auth</a>
-            {
-               isAuthenticated && localStorage.getItem("Role")==="Admin" &&
-                (
-                    <>
-                    <a href="./ApproveLeave">Approve Leave</a>
-                    <a href="./RequestLeave" >Request Leave</a>
-                    </>
-                )
-            }
-             
-                {isAuthenticated && localStorage.getItem("Role") === "User" &&
-                (
-                    <>
-                    {/* <a href="./ApproveLeave">Approve Leave</a>*/}
-                    <a href="./RequestLeave">Request Leave</a> 
-                    </>
-                )}
+        <nav className='navbar navbar-strong bg-light px-10'>
+            <a className='navbar-brand' href='/'>Employee Leave Management System</a>
             
+                
             {isAuthenticated &&(
-                <><span> {localStorage.getItem("username")} ({localStorage.getItem("Role")})</span><button
+                <><span> {localStorage.getItem("username")} ({localStorage.getItem("Role")})</span>&nbsp;&nbsp;<button
                     className='btn btn-danger'
                     onClick={() => { AuthService.logout(); navigate("/login", { replace: true }); } }>Logout</button></>
             )}

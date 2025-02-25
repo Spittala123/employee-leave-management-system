@@ -1,90 +1,124 @@
-// import Employee from "./Employee";
-// import LeaveRequestForm from "./LeaveRequestForm";
 
-// const Dashboard = () => {
-//     return <><h2 className='container mt-5'>Welcome to User Dashboard</h2>
-//      {/* <LeaveRequestForm /> */}
-//     </>
-// }
-
-// export default Dashboard;
+import axios from "axios";
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import './styles.css' 
+import './Dashboard.css'
 
 interface LeaveData {
-  leaveType: string;
-  balance: number;
+    leaveType: string;
+    balance: number;
 }
 
 interface LeaveRequest {
-  id: number;
-  type: string;
-  startDate: string;
-  endDate: string;
-  status: string;
+    id: number;
+    type: string;
+    startDate: string;
+    endDate: string;
+    status: string;
 }
-
+const ID = localStorage.getItem("employeeid");
+const API = "http://localhost:5224/api/Auth/id?id=" + ID;
+const APILeaveDetails = "http://localhost:5224/api/LeaveRequest/id?id=" + ID;
 const Dashboard: React.FC = () => {
-  const [leaveData, setLeaveData] = useState<LeaveData[]>([]);
-  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>([]);
+    const [leaveData, setLeaveData] = useState<LeaveData[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    // Fetch leave balances (simulate API call)
-    fetchLeaveData();
+    const [leaveDetail, setLeaveDetail]= useState<LeaveRequest[]>([]);
+    const role = localStorage.getItem("Role")?.toLowerCase() ;
+   console.log(role);
+    useEffect(() => {
+        fetchLeaveData();
 
-    // Fetch user's leave requests (simulate API call)
-    fetchLeaveRequests();
-  }, []);
+        fetchLeaveRequests();
+    }, []);
 
-  const fetchLeaveData = async () => {
-    // Example leave balance data
-    const data: LeaveData[] = [
-      { leaveType: 'Sick Leave', balance: 10 },
-      { leaveType: 'Casual Leave', balance: 5 },
-      { leaveType: 'Annual Leave', balance: 12 },
-    ];
-    setLeaveData(data);
-  };
+    const fetchLeaveData = async () => {
+        setLoading(true);
 
-  const fetchLeaveRequests = async () => {
-    // Example leave request data
-    const data: LeaveRequest[] = [
-      { id: 1, type: 'Sick Leave', startDate: '2025-02-15', endDate: '2025-02-16', status: 'Approved' },
-      { id: 2, type: 'Casual Leave', startDate: '2025-03-01', endDate: '2025-03-02', status: 'Pending' },
-    ];
-    setLeaveRequests(data);
-  };
+        try {
+            const response = await axios.get(API,
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem("token")
+                    }
+                });
+            const data: LeaveData[] = [
+                { leaveType: 'Sick Leave', balance: response.data[0].pendingSickLeaves },
+                { leaveType: 'Vacation Leave', balance: response.data[0].pendingVacationLeaves },
+                { leaveType: 'Others', balance: response.data[0].pendingOtherLeaves },
+            ];
+            setLeaveData(data);
+            console.log(data);
+        } catch (error) {
+            seterror('Error fetching Data');
+        }
+        finally {
+            setLoading(false);
+        }
+fetchLeaveData();
 
-  return (
-    <div className="user-dashboard">
-      <h1>Welcome to Your Dashboard</h1>
+    }
 
-      <div className="leave-balance">
-        <h2>Your Leave Balances</h2>
-        <ul>
-          {leaveData.map((leave) => (
-            <li key={leave.leaveType}>
-              <strong>{leave.leaveType}:</strong> {leave.balance} days
-            </li>
-          ))}
-        </ul>
-      </div>
+    const fetchLeaveRequests = async () => {
+    setLoading(true);
+        try {
+            const response = await axios.get(APILeaveDetails,
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem("token")
+                    }
+                });
+            
+         setLeaveDetail(response.data);
 
-      <div className="leave-request">
-        <h2>Leave Requests</h2>
-        <Link to="/request-leave">Request New Leave</Link>
-        <table>
-          <thead>
-            <tr>
-              <th>Leave Type</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leaveRequests.map((request) => (
+        } catch (error) {
+            seterror('Error fetching Data');
+        }
+        finally {
+            setLoading(false);
+        }
+        fetchLeaveRequests();
+    };
+
+    return (
+        <div className="user-dashboard">
+            <h1>Welcome to Your Dashboard</h1>
+
+            <div className="leave-balance">
+                <h2>Your Leave Balances</h2>
+                <ul>
+
+                    {leaveData.map((leave) => (
+                        <li key={leave.leaveType}>
+                            <strong>{leave.leaveType}:</strong> {leave.balance} days
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div className="dashboard">
+                <h2>Leave Requests</h2>
+                
+         {role=='admin' ? (
+            <div>
+        <a href="/requestleave">Request Leave</a> &nbsp;&nbsp;&nbsp;
+
+         <a href="/approveleave">Approve Leaves</a>
+        </div>
+      ) : (
+        <a href="/requestleave">Request Leave</a>
+      )}
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            {leaveDetail.map((request) => (
               <tr key={request.id}>
                 <td>{request.type}</td>
                 <td>{request.startDate}</td>
@@ -92,11 +126,14 @@ const Dashboard: React.FC = () => {
                 <td>{request.status}</td>
               </tr>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+          </tbody> 
+                </table>
+            </div>
+        </div>
+    );
 };
 
 export default Dashboard;
+function seterror(arg: string) {
+    throw new Error("Function not implemented.");
+}
