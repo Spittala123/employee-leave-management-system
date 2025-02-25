@@ -11,7 +11,7 @@ export interface LeaveRequest {
        id:number;
     startDate:Date;
     endDate:Date;
-    employeeName:string;
+    userName:string;
     status:string;
     quantity:number;
   }

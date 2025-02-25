@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import {LeaveApprove} from "../types/LeaveRequest"
+// import { date } from "yup";
 import axios from "axios";
-// import {style} from "../components/styles.css"
-const ApproveLeave =() =>
+import React from "react";
+import {style} from "components\styles.css"
+const ApproveLeave =() => 
 {
     const [LeaveApprove, setLeaveApprove]= useState<LeaveApprove[]>([]);
     const API ="http://localhost:5224/api/LeaveApproval"
@@ -10,14 +12,15 @@ const ApproveLeave =() =>
     const [loading, setLoading] = useState<boolean>(true);
     const [form, setForm] = useState<LeaveApprove>({
         id: 0,
-        employeeName: "",
+        userName: "",
         status: "",
         startDate: new Date(),
         endDate: new Date(),
         quantity:0
     });
   useEffect(()=>
-{
+{   fetchLeaveData();
+
     const fetchData = async () =>
     {
         try{
@@ -38,6 +41,10 @@ const ApproveLeave =() =>
     }
     fetchData();
 })
+const fetchLeaveData = async () => {
+    // Example leave balance data
+   
+  };
 const updateEmployee = (id: number, approveStatus: string) => {
     const updatedForm = { ...form, status:approveStatus ,id:id };
     console.log(updatedForm);
@@ -51,12 +58,15 @@ const updateEmployee = (id: number, approveStatus: string) => {
     })
         .then(() => {
             setLeaveApprove(LeaveApprove.map((emp) => (emp.id === id ? { ...updatedForm, id } : emp)));
-            setForm({ id: 0, employeeName: "", status: "", startDate: new Date(), endDate: new Date(),quantity:0 });
+            setForm({ id: 0, userName: "", status: "", startDate: new Date(), endDate: new Date(),quantity:0 });
         })
         .catch((error) => console.error(error));
 };
     return <>
-      
+       <div>
+      <a href="/dashboard">Dashboard</a> &nbsp;&nbsp;&nbsp;
+
+      </div>
     <h2>Leave Approve Page</h2>
     <table>
     <thead>
@@ -74,7 +84,7 @@ const updateEmployee = (id: number, approveStatus: string) => {
         {LeaveApprove.map(leave=>(
             <tr key={leave.id}>
                 {/* <td>{leave.id}</td> */}
-                <td>{leave.employeeName}</td>
+                <td>{leave.userName}</td>
                <td>{new Date(leave.startDate).toLocaleDateString()}</td>
                 <td>{new Date(leave.endDate).toLocaleDateString()}</td> 
                                <td>{leave.status}</td>
