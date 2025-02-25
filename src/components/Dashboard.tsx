@@ -24,7 +24,6 @@ const Dashboard: React.FC = () => {
 
     const [leaveDetail, setLeaveDetail]= useState<LeaveRequest[]>([]);
     const role = localStorage.getItem("Role")?.toLowerCase() ;
-   console.log(role);
     useEffect(() => {
         fetchLeaveData();
 
@@ -54,7 +53,7 @@ const Dashboard: React.FC = () => {
         finally {
             setLoading(false);
         }
-fetchLeaveData();
+// fetchLeaveData();
 
     }
 
@@ -76,7 +75,7 @@ fetchLeaveData();
         finally {
             setLoading(false);
         }
-        fetchLeaveRequests();
+        // fetchLeaveRequests();
     };
 
     return (

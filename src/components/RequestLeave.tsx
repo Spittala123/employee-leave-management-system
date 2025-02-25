@@ -53,6 +53,8 @@ const LeaveRequestForm: React.FC = () => {
                 window.location.reload();
             } catch (error) {
                 console.error('Error:', error);
+                alert("Insufficient Leave Balance");
+
             }
         };
 
@@ -69,6 +71,10 @@ const LeaveRequestForm: React.FC = () => {
     return (
         <div className="leave-form-container">
       <h2>Apply for Leave</h2>
+      <div>
+      <a href="/dashboard">Dashboard</a> &nbsp;&nbsp;&nbsp;
+
+      </div>
         <form onSubmit={handleSubmit}>
            
             <div className="form-group">
