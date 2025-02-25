@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {LeaveApprove} from "../types/LeaveRequest"
-import { date } from "yup";
 import axios from "axios";
 // import {style} from "../components/styles.css"
 const ApproveLeave =() =>
